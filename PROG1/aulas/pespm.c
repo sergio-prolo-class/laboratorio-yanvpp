@@ -12,7 +12,7 @@ int main()
           &pes, &polegadas);
 
     alturap = pes * 12;
-    alturap = alturap + polegadas;
+    alturap += polegadas;
 
     alturam = (float)(alturap * 0.0254);
 
