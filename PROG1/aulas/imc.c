@@ -11,11 +11,11 @@ int main()
 
     imc = peso / (altura * altura);
 
-    printf("IMC: %f kg/m²\n", imc);
+    printf("IMC: %.2f kg/m²\n", imc);
 
     if (imc < 18.5)
     {
-        printf("Classificação: baixo do peso\n");
+        printf("Classificação: Abaixo do peso\n");
     }
     else if (imc >= 18.5 && imc < 24.9)
     {
