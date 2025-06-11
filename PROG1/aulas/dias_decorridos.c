@@ -58,7 +58,10 @@ int main()
                 dias_decorridos = 31 + 29 + dia;
 
             case 4:
-                dias_decorridos = 31 + 29 + 31 default : break;
+                dias_decorridos = 31 + 29 + 31 + dia;
+
+            default:
+                break;
             }
         }
     }
