@@ -16,14 +16,7 @@ float media(float x, float y, float z)
 
 float arredonda(float x)
 {
-    if (x / (int)x < 0.5)
-    {
-        return (int)x;
-    }
-    else
-    {
-        return (int)(x + 0.999999);
-    }
+    return (int)(x + 0.5);
 }
 
 int main()
@@ -43,9 +36,9 @@ int main()
     printf("Entre com a frequência (%%): ");
     scanf("%f", &frequencia);
 
-    nota1 = maximo(p1, r1);
-    nota2 = maximo(p2, r2);
-    nota3 = maximo(p3, r3);
+    nota1 = (r1 == -1) ? p1 : maximo(p1, r1);
+    nota2 = (r2 == -1) ? p2 : maximo(p2, r2);
+    nota3 = (r3 == -1) ? p3 : maximo(p3, r3);
 
     nota1 = arredonda(nota1);
     nota2 = arredonda(nota2);
