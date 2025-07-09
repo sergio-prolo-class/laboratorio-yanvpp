@@ -3,11 +3,11 @@
 #include <stdbool.h>
 
 typedef struct {
-    char titulo[50];
-    char autor[50];
+    char titulo;
+    char autor;
     int data_inicio;
     int data_fim;
-    char comentario[1000];
+    char comentario;
 } Livro;
 
 int main()
