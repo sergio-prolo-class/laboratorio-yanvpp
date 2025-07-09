@@ -1,44 +1,74 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdbool.h>
+#include <stdio.h>    // Comandos básicos
+#include <string.h>   // Para strings
+#include <stdbool.h>  // Para booleano
+#include <unistd.h>   // Para sleep()
 
-typedef struct {
+typedef struct
+{
+    int dia, mes, ano;
+} Data;
+
+typedef struct
+{
     char titulo;
     char autor;
-    int data_inicio[3];
-    int data_fim[3];
+    Data data_inicio;
+    Data data_fim;
     char comentario;
 } Livro;
 
-int tela_inicial(int *escolha)
+void cadastrar(Livro *livro)
 {
-    int *escolha;
+    printf("|--Cadastrar--|\n");
+    printf("Entre com o título do livro: ");
+    scanf("%s", &livro->titulo);
 
-    printf("READING TRACKER\n");
-    printf("Selecione uma opção:\n");
-    printf("1. Cadastrar livro\n");
-    printf("2. Consultar livros\n");
-    printf("3. Remover livro\n");
-    printf("4. Sair");
+    printf("Entre com o nome do autor: ");
+    scanf("%s", &livro->autor);
 
-    scanf("%d", escolha);
+    printf("Entre com a data de início da leitura (DD/MM/AAA): ");
+    scanf("%d/%d/%d", &livro->data_inicio.dia, &livro->data_inicio.mes, &livro->data_inicio.ano);
 
-    if (escolha == 4) {
-        return 0;
-    } else {
-        return 1;
-    }
-}
+    printf("Entre com a data de fim da leitura (DD/MM/AAA): ");
+    scanf("%d/%d/%d", &livro->data_fim.dia, &livro->data_fim.mes, &livro->data_fim.ano);
 
-void cadastrar()
-{
+    printf("Entre com os seus comentários sobre o livro: ");
+    scanf("%s", &livro->comentario);
+
+    // Cadastro das informações recebidas em um arquivo:
+
+    printf("Livro cadastrado com sucesso, retornando para o menu inicial!\n\n");
+
+    sleep(2);  // Aguarda 2 segundos para voltar ao menu inical
 }
 
 int main()
 {
     int escolha;
+    Livro livro;
 
-    tela_inicial(&escolha);
+    printf("|--READING TRACKER--|\n");
+    printf("Selecione uma opção:\n");
+    printf("1. Cadastrar livro\n");
+    printf("2. Consultar livros\n");
+    printf("3. Remover livro\n");
+    printf("4. Sair\n");
 
-    return 0;
+    scanf("%d", &escolha);
+
+    if (escolha == 4) {
+        return 0;
+    } else {
+        switch (escolha) {
+            case 1:
+                cadastrar(&livro);
+                printf("|--READING TRACKER--|\n");
+                printf("Selecione uma opção:\n");
+                printf("1. Cadastrar livro\n");
+                printf("2. Consultar livros\n");
+                printf("3. Remover livro\n");
+                printf("4. Sair\n");  // Precisa retornar para o começo do int main(), não imprimir novamente aqui
+                break;
+        }
+    }
 }
