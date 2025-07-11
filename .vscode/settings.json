@@ -1,5 +1,26 @@
 {
-    "C_Cpp.codeAnalysis.clangTidy.checks.disabled": [
-        "clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling"
-    ]
+    "window.zoomLevel": 1,
+    "workbench.colorTheme": "Min Dark",
+    "symbols.hidesExplorerArrows": false,
+    "workbench.iconTheme": "vs-seti-jetbrainsmononerdfont",
+    "editor.fontSize": 14,
+    "editor.lineHeight": 1.8,
+    "workbench.editor.labelFormat": "short",
+    "explorer.compactFolders": false,
+    "editor.semanticHighlighting.enabled": false,
+    "breadcrumbs.enabled": true,
+    "editor.minimap.enabled": false,
+    "editor.scrollbar.vertical": "hidden",
+    "editor.scrollbar.horizontal": "hidden",
+    "workbench.statusBar.visible": false,
+
+    "editor.fontFamily": "'JetBrainsMonoNL Nerd Font Mono', 'JetBrainsMonoNL Nerd Font', 'JetBrainsMono Nerd Font Mono', 'JetBrainsMono Nerd Font', 'Droid Sans Mono'",
+    "editor.fontLigatures": true,
+    "terminal.integrated.fontLigatures.enabled": true,
+
+    "window.commandCenter": false,
+    "workbench.layoutControl.enabled": false,
+
+    "terminal.integrated.fontSize": 12,
+    "terminal.integrated.fontFamily": "JetBrainsMono Nerd Font",
 }
