@@ -1,9 +1,11 @@
 #include <stdio.h>     // Comandos básicos
-#include <string.h>    // Para strings
 #include <stdbool.h>   // Para booleano
 #include <unistd.h>    // Para sleep() e access()
 #include <sys/stat.h>  // Para criar pastas
 #include <dirent.h>    // Para opendir() e readdir()
+#include <stdlib.h>
+
+#define PRATELEIRA 101  // para ir de 1 a 100, sem preencher o índice 0
 
 typedef struct
 {
@@ -19,13 +21,44 @@ typedef struct
     char comentario[1000];
 } Livro;
 
+bool bissexto(Livro *livro)
+{
+    return (livro->data_inicio.ano % 4 == 0 && livro->data_inicio.ano % 100 != 0) || (livro->data_inicio.ano % 400 == 0);
+}
+
+int num_dias(Livro *livro)
+{
+    switch (livro->data_inicio.mes) {
+        case 4:
+        case 6:
+        case 9:
+        case 11:
+            return 30;
+        case 2:
+            return bissexto(livro->data_inicio.ano) ? 29 : 28;
+        default:
+            return 31;
+    }
+}
+
+bool eh_data_valida_i(Livro *livro)
+{
+    Livro livro;
+    if (livro->data_inicio.mes < 1 || livro->data_inicio.mes > 12) {
+        return false;
+    }
+    return 1 <= livro->data_inicio.dia && 1 <= num_dias(&livro->data_inicio);
+}
+
 bool pasta_existe()  // verifica se a pasta já existe
 {
     return access("Livros lidos", F_OK) == 0;
 }
 
-void duracao_leitura(Livro *data_inicio, Livro *data_fim) {
+int duracao_leitura(Livro)
+{
     // adicionar cálculo referente à duração da leitura em dias
+    return;  // retorna a duração da leitura em dias
 };
 
 bool verificar(char *titulo)  // retorna true se o arquivo existe
@@ -51,6 +84,7 @@ bool salvar_livro(Livro *livro)
     fprintf(arquivo, "Autor: %s\n", livro->autor);
     fprintf(arquivo, "Data de início: %02d/%02d/%04d\n", livro->data_inicio.dia, livro->data_inicio.mes, livro->data_inicio.ano);
     fprintf(arquivo, "Data de fim: %02d/%02d/%04d\n", livro->data_fim.dia, livro->data_fim.mes, livro->data_fim.ano);
+    // fprint(arquivo, "Duração da leitura: %d dias\n", duracao_leitura(Livro));
     fprintf(arquivo, "Comentário: %s", livro->comentario);
 
     fclose(arquivo);
@@ -79,8 +113,8 @@ void adicionar(Livro *livro)
         printf("Este livro já foi cadastrado.\n");
         sleep(1);
         printf("Retornando ao menu inicial...\n");
-        printf("\n");
         sleep(2);
+        printf("\n");
         return;
     }
 
@@ -90,8 +124,24 @@ void adicionar(Livro *livro)
     printf("Entre com a data de início da leitura (DD/MM/AAA): ");
     scanf("%d/%d/%d", &livro->data_inicio.dia, &livro->data_inicio.mes, &livro->data_inicio.ano);
 
+    if (!eh_data_valida(&livro->data_inicio))  // verifica se a data é válida
+    {
+        while (!eh_data_valida(&livro->data_inicio)) {
+            printf("Data inválida, insira novamente: ");
+            scanf("%d/%d/%d", &livro->data_inicio.dia, &livro->data_inicio.mes, &livro->data_inicio.ano);
+        }
+    }
+
     printf("Entre com a data de fim da leitura (DD/MM/AAA): ");
     scanf("%d/%d/%d", &livro->data_fim.dia, &livro->data_fim.mes, &livro->data_fim.ano);
+
+    if (!eh_data_valida(&livro->data_fim))  // verifica se a data é válida
+    {
+        while (!eh_data_valida(&livro->data_fim)) {
+            printf("Data inválida, insira novamente: ");
+            scanf("%d/%d/%d", &livro->data_fim.dia, &livro->data_fim.mes, &livro->data_fim.ano);
+        }
+    }
 
     printf("Entre com os seus comentários sobre o livro: ");
     scanf(" %[^\n]", livro->comentario);  // lê até uma quebra de linha
@@ -103,25 +153,81 @@ void adicionar(Livro *livro)
         sleep(1);
         printf("Retornando ao menu inicial...\n");
         sleep(2);
+        return;
     }
 
-    printf("Livro cadastrado com sucesso, retornando para o menu inicial!\n\n");
-
+    printf("Livro cadastrado com sucesso, retornando para o menu inicial!\n");
     sleep(2);  // Aguarda 2 segundos para voltar ao menu inical
+    printf("\n");
 }
 
-void consultar(Livro *livro)
+void remover(titulo)
+{
+    printf("|--Remover livro--|\n");
+    printf("\nEntre com o título do livro para remover: ");
+    scanf(" [%^\n]", &titulo);
+    sleep(1);
+
+    int escolha = 0;
+
+    printf("\nVocê tem certeza que deseja remover o livro '%s' da sua lista?\n");
+    printf("1. Sim\n");
+    printf("2. Não\n");
+    scanf("%d", &escolha);
+
+    if (escolha == 2) {
+        sleep(1);
+        printf("Certo, o livro não foi removido.");
+        sleep(1);
+        printf("Voltando...");
+        sleep(2);
+        return;
+    }
+}
+
+void info_livro(int escolha)  // recebe o índice do livro escolhido
+{
+    // mostra as informações contidas no arquivo e mostra as opções
+
+    printf("\n|--Opções--|\n");
+    printf("1. Modificar informações\n");
+    printf("2. Remover livro\n");
+    printf("3. Voltar\n");
+
+    int escolha;
+
+    switch (escolha) {
+        case 1:
+            // modificar();
+            break;
+        case 2:
+            remover();
+            break;
+        case 3:
+            printf("\nRetornando...\n");
+            sleep(2);
+            return;
+    }
+}
+
+void listar(Livro livro)
 {
     char nome_do_livro[100];
+    int escolha;
+    printf("\n|--Lista de livros--|\n");
 
-    // aqui preciso de uma lista do título dos livros adicionados,
+    // aqui os nomes dos arquivos serão listados com o índice no lado
 
-    // como faço para relacionar cada elemento do struct com uma linha do arquivo?
+    printf("\nDigite '0' para retornar ao menu, ou o índice do livro para mais informações.");
+    scanf("%d", &escolha);
 
-    // criar struct para gerar .txt e for para percorrer o array de structs
-
-    printf("Entre com o nome do livro: ");
-    scanf(" %[^/n]", nome_do_livro);
+    if (escolha == 0) {
+        printf("Retornando ao menu inicial...");
+        sleep(2);
+        return;
+    } else {
+        info_livro(escolha);
+    }
 }
 
 void contador()  // conta a quantidade de livros adicionados
@@ -131,8 +237,7 @@ void contador()  // conta a quantidade de livros adicionados
 int main()
 {
     int escolha;
-    Livro livro;
-    Livro biblioteca[100];
+    Livro livro[PRATELEIRA];
 
     if (!pasta_existe()) {  // cria a pasta livros no computador
         mkdir("Livros lidos");
@@ -141,9 +246,8 @@ int main()
     do {
         printf("|--READING TRACKER--|\n");
         printf("1. Adicionar livro\n");
-        printf("2. Consultar livros\n");
+        printf("2. Listar livros\n");
         printf("3. Quantos livros já li?\n");
-        printf("4. Remover livro\n");
         printf("5. Sair\n");
         printf("\nSelecione uma opção: ");
 
@@ -155,22 +259,19 @@ int main()
         switch (escolha) {
             case 1:
                 adicionar(&livro);
-                escolha = 0;
                 break;
             case 2:
-                consultar(&livro);
-                escolha = 0;
+                listar(livro[PRATELEIRA]);
                 break;
-                /*case3:
-                remover(&livro);
-                escolha = 0;
+                /*case 3:
+                quantidade(&livro);
                 break;*/
-            case 5:
+            case 4:
                 printf("Boa leitura!\n");
                 sleep(1);
                 printf("Encerrando programa...");
                 sleep(2);
                 return 0;
         }
-    } while (escolha != 5);
+    } while (escolha != 4);
 }
