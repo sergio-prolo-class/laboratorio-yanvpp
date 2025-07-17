@@ -1,27 +1,11 @@
 #include <stdio.h>     // Comandos básicos
 #include <stdbool.h>   // Para booleano
-#include <unistd.h>    // Para sleep() e access()
+#include <unistd.h>    // Para sleep()
 #include <sys/stat.h>  // Para criar pastas
 #include <dirent.h>    // Para opendir() e readdir()
 #include <string.h>    // Para verificar a extensão do arquivo
 #include <stdlib.h>
-
-#define PRATELEIRA 101  // para ir de 1 a 100, sem preencher o índice 0
-
-typedef struct
-{
-    int dia, mes, ano;
-} Data;
-
-typedef struct
-{
-    int isbn;  // responsável por guardar o índice de cada livro
-    char titulo[100];
-    char autor[100];
-    Data data_inicio;
-    Data data_fim;
-    char comentario[1000];
-} Livro;
+#include "livro.h"  // toda a lógica do meu código
 
 bool eh_data_valida(Data data)
 {
@@ -70,28 +54,11 @@ bool salvar_livro(Livro *livro)
         printf("\n");
         return false;
     }
-
-    /*
-    fprintf(arquivo, "Título: %s\n", livro->titulo);
-    fprintf(arquivo, "Autor: %s\n", livro->autor);
-    fprintf(arquivo, "Data de início: %02d/%02d/%04d\n", livro->data_inicio.dia, livro->data_inicio.mes, livro->data_inicio.ano);
-    fprintf(arquivo, "Data de fim: %02d/%02d/%04d\n", livro->data_fim.dia, livro->data_fim.mes, livro->data_fim.ano);
-    fprintf(arquivo, "Duração da leitura: %d dias\n", duracao_leitura(livro));
-    fprintf(arquivo, "Comentário: %s", livro->comentario);
-    */
     size_t escrito = fwrite(livro, sizeof(Livro), 1, arquivo);
 
     fclose(arquivo);
 
     return escrito == 1;
-
-    /*como relaciono cada elemento do struct com uma linha do arquivo?
-    também quero que o FILE salve os arquivo, cada qual com seu nome.txt
-    para facilitar a localização dentro da pasta 'Livros lidos'*/
-
-    /*também preciso adicionar o void verificar() aqui para, antes de adicionar
-    um novo livro, verificar se o mesmo título já está presente na pasta, porém,
-    preciso entender como relacionar cada elemento do struct com uma linha do file*/
 }
 
 bool adicionar(Livro *livro, int indice)
@@ -423,64 +390,4 @@ void contar_livros(Livro prateleira[], int total_de_livros)
     printf("Retornando ao menu inicial...\n");
     sleep(2);
     printf("\n");
-}
-
-int main()
-{
-    int escolha, indice;
-    Livro livro[PRATELEIRA] = {0};
-
-    if (!pasta_existe()) {  // cria a pasta livros no computador
-        mkdir("Livros lidos");
-    }
-
-    indice = carregar_livros(livro);
-
-    do {
-        printf("|--READING TRACKER--|\n");
-        printf("1. Adicionar livro\n");
-        printf("2. Listar livros\n");
-        printf("3. Quantos livros já li?\n");
-        printf("4. Remover livro\n");
-        printf("5. Modificar livro\n");
-        printf("6. Sair\n");
-        printf("\nSelecione uma opção: ");
-
-        scanf("%d", &escolha);
-        getchar();
-
-        printf("\n");
-
-        switch (escolha) {
-            case 1:
-                if (adicionar(&livro[indice], indice)) {
-                    indice++;
-                }
-                break;
-            case 2:
-                listar(livro, indice);
-                break;
-            case 3:
-                contar_livros(livro, indice);
-                break;
-            case 4:
-                remover(livro, indice);
-                break;
-            case 5:
-                modificar(livro, indice);
-                break;
-            case 6:
-                printf("Boa leitura!\n");
-                sleep(1);
-                printf("Encerrando programa...");
-                sleep(2);
-                return 0;
-            default:
-                printf("Opção inválida. Tente novamente.\n");
-                sleep(1);
-                printf("\n");
-        }
-    } while (escolha != 6);
-
-    return 0;
 }
