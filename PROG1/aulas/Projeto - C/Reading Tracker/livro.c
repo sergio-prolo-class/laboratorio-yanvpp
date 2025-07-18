@@ -171,11 +171,12 @@ void remover(Livro prateleira[], int total_de_livros)
             prateleira[indice_para_remover].titulo[0] = '\0';
             printf("\nLivro removido com sucesso!\n\n");
         } else {
-            perror("Erro ao tentar remover o arquivo");
+            perror("Erro ao tentar remover o arquivo\n");
         }
     } else {
         printf("\nRemoção cancelada.\n\n");
     }
+    printf("Retornando ao menu inicial...\n\n");
     sleep(2);
 }
 
@@ -265,7 +266,7 @@ void modificar(Livro prateleira[], int total_de_livros)
     } while (escolha_campo != 0);
 
     printf("Retornando ao menu principal...\n\n");
-    sleep(1);
+    sleep(2);
 }
 
 void info_livro(Livro prateleira[], int total_de_livros, int indice_do_livro)  // recebe o índice do livro escolhido
@@ -284,9 +285,8 @@ void info_livro(Livro prateleira[], int total_de_livros, int indice_do_livro)  /
 
     printf("\nPressione a tecla 'Enter' para retornar ao menu inicial...\n");
     getchar();
-    printf("Retornando ao menu inicial...\n");
+    printf("Retornando ao menu inicial...\n\n");
     sleep(2);
-    printf("\n");
 }
 
 void listar(Livro prateleira[], int total_de_livros)
@@ -295,9 +295,8 @@ void listar(Livro prateleira[], int total_de_livros)
 
     // lista de nomes com índices ao lado:
 
-    printf("\n|--Lista de livros--|\n");
-    printf("\n");
-    sleep(2);
+    printf("\n|--Lista de livros--|\n\n");
+    sleep(1);
 
     if (total_de_livros == 1) {
         printf("Nenhum livro cadastrado.\n");
@@ -319,20 +318,17 @@ void listar(Livro prateleira[], int total_de_livros)
     printf("\nSelecione uma opção: ");
     scanf("%d", &escolha);
     getchar();
-    printf("\n");
 
     if (escolha == 0) {
-        printf("Retornando ao menu inicial...\n");
-        sleep(2);
-        printf("\n");
-        return;
+        printf("\nRetornando ao menu inicial...\n\n");
     } else if (escolha > 0 && escolha < total_de_livros && strlen(prateleira[escolha].titulo) > 0) {
         sleep(1);
         info_livro(prateleira, total_de_livros, escolha);  // Passa o endereço do livro escolhido no array
     } else {
-        printf("Índice inválido!\n");
-        sleep(2);
+        printf("\nÍndice inválido!\n\n");
     }
+    printf("Retornando ao menu inicial...\n\n");
+    sleep(2);
 }
 
 int carregar_livros(Livro prateleira[])
